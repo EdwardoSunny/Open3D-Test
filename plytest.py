@@ -14,7 +14,6 @@ transform_info = np.array([[-0.279217,  -0.641566,   0.714431,   0.359994],
 
 def get_rot_trans_matrix(transform_info):
     rot_matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-    translate_vector = []
     for i in range(0, 3):
         for j in range(0, 3):
             rot_matrix[i][j] = transform_info[i][j]
@@ -55,8 +54,8 @@ pcd_data = np.array(pcd.points)
 
 for i in range(0, len(pcd_data)):
     pcd_data[i] = pcd_data[i] * 1/1000
-    pcd_data[i] = np.subtract(pcd_data[i], translate_matrix)
-    pcd_data[i] = np.matmul(rot_matrix_inverse, pcd_data[i])
+    pcd_data[i] = np.add(pcd_data[i], translate_matrix)
+    pcd_data[i] = np.matmul(rot_matrix, pcd_data[i])
 
 # pcd = o3d.geometry.PointCloud()
 # pcd.points = o3d.utility.Vector3dVector(pcd_data.astype(np.float64))
@@ -73,55 +72,3 @@ ax.quiver(translate_matrix[0], translate_matrix[1], translate_matrix[2], 0.25*y_
 ax.quiver(translate_matrix[0], translate_matrix[1], translate_matrix[2], 0.25*z_unit_cam[0], 0.25*z_unit_cam[1], 0.25*z_unit_cam[2], color='b', arrow_length_ratio=0.25)
 
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-# class Arrow3D(FancyArrowPatch):
-#     def __init__(self, xs, ys, zs, *args, **kwargs):
-#         FancyArrowPatch.__init__(self, (0, 0), (0, 0), *args, **kwargs)
-#         self._verts3d = xs, ys, zs
-
-#     def draw(self, renderer):
-#         xs3d, ys3d, zs3d = self._verts3d
-#         print(xs3d)
-#         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)
-#         self.set_positions((xs[0], ys[0]), (xs[1], ys[1]))
-#         FancyArrowPatch.draw(self, renderer)
-    
-#     def do_3d_projection(self, renderer=None):
-#         xs3d, ys3d, zs3d = self._verts3d
-#         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)
-#         self.set_positions((xs[0],ys[0]),(xs[1],ys[1]))
-
-#         return np.min(zs)
-
-
-# fig = plt.figure()
-# ax = fig.add_subplot(111, projection='3d')
-# arrow_prop_dict = dict(mutation_scale=20, arrowstyle='->', shrinkA=0, shrinkB=0)
-
-
-# a = Arrow3D([0, 1], [0, 0], [0, 0], **arrow_prop_dict, color='r')
-# ax.add_artist(a)
-# a = Arrow3D([0, 0], [0, 1], [0, 0], **arrow_prop_dict, color='b')
-# ax.add_artist(a)
-# a = Arrow3D([0, 0], [0, 0], [0, 1], **arrow_prop_dict, color='g')
-# ax.add_artist(a)
-
-# ax.text(0.0, 0.0, -0.1, r'$o$')
-# ax.text(1.1, 0, 0, r'$x$')
-# ax.text(0, 1.1, 0, r'$y$')
-# ax.text(0, 0, 1.1, r'$z$')
-
-# # ax.view_init(azim=-90, elev=90)
-# ax.set_axis_off()
-# plt.show()
